@@ -5,189 +5,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php require('inc/links.php'); ?>
-    <!-- BOOTstrap -->
+    <title><?php echo $settings_r['site_title'] ?> - Papers</title>
     <link rel="stylesheet" href="boot.css">
-    <title><?php echo $settings_r['site_title']?> - Papers</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"
-      />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity ="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  
-
-    <!-- <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #8d6ea7b8;
-        }
-
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        h1 {
-            margin-top: 50px;
-        }
-
-        .stream {
-            padding: 41px;
-            margin: 30px;
-            border: 1px solid black;
-            background: linear-gradient(45deg, #796b77ec, #4c157e00);
-        }
-
-        h2 {
-            font-size: 2em;
-            color: #333;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            margin-top: 10vh;
-        }
-            .pdf_dow{border: none;
-    background-color: white;
-    color: blue;
-            }
-
-        /* a {
-            margin: 20px;
-            padding: 10px 20px;
-            background: linear-gradient(45deg, #a769b08f, #7732a2c8);
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        a:hover { transition: all 0.1s ease-in 0.1s;
-            background:linear-gradient(45deg,#a769b08f, #0056b3, #7816b5c8);
-            padding: 20px;
-        } */
-    </style> -->
 </head>
 
 <body>
-<?php require('inc/header.php'); ?>
+    <?php require('inc/header.php'); ?>
 
-   
-<!-- Breadcrumb Section Begin -->
-<div class="breadcrumb-section">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="breadcrumb-text text-center">
-          <h2>PAPERS</h2>
-         
-          <div class="bt-option">
-            <a href="index.php">Home</a>
-            <span>Papers</span>
-            <div class="h-line bg-dark"></div>
-          </div>
-          
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb-hero">
+        <div class="container breadcrumb-hero-content text-center">
+            <h1>📄 Question Papers</h1>
+            <p style="color:rgba(255,255,255,0.65);font-size:1rem;margin-bottom:20px;">Previous year exam papers to help
+                you prepare and ace your exams.</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center">
+                    <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                    <li class="breadcrumb-item active">Papers</li>
+                </ol>
+            </nav>
         </div>
-      </div>
     </div>
-  </div>
-</div>
-<!-- Breadcrumb Section End -->
-    <div class="container">
-        <h1>Previous Year Question Papers</h1>
-        <div class="stream">
-            <h2>BCA</h2>
-            <ul>
-            <?php
-                $pre_q = "SELECT * FROM `papers` WHERE `course`=?  ORDER BY `year`";
-                // course name 
-                $values= ['BCA'];
-                $res = select($pre_q, $values, 's');
 
-
-                $path = PAPERS_IMG_PATH;
-
-
-                while($row = mysqli_fetch_assoc($res)){
-                $book_btn = "";
-                if (!$settings_r['shutdown']) {
-                    $login = 0;
-                    if (isset($_SESSION['login']) && $_SESSION['login'] == true) {
-                    $login = 1;
-                    }
-
-                    if ($login) {
-                    $book_btn = "<a href='$path$row[pdf]' class='pdf_dow' download>
-                                     Download $row[subject] Question Papers $row[year]
-                                </a>";
-                } else {
-                    $book_btn = "<a  onclick='checkLoginToBook($login)'class='pdf_dow'>
-                                    Download $row[subject] Question Papers $row[year]
-                                </a>";
-                }
-                    
-                }
-                echo<<<data
-                
-                <li>$book_btn</li>
-                
-
-                data;
-                }
-                ?>    
+    <!-- INTRO -->
+    <section style="background:var(--bg-light);padding:60px 0 30px;">
+        <div class="container">
+            <div style="background:white;border-radius:var(--radius-xl);padding:40px;border:1px solid var(--border-color);box-shadow:var(--shadow-md);text-align:center;"
+                class="appear-animation">
+                <h2 style="font-size:1.7rem;margin-bottom:12px;">Ace Your Exams with Confidence</h2>
+                <p style="color:var(--text-muted);font-size:1rem;max-width:650px;margin:0 auto;line-height:1.75;">
+                    Browse previous year question papers for BCA and BBA — sorted by course and year.
+                    Understand the exam pattern, practice with real questions, and walk in prepared.
+                </p>
+            </div>
         </div>
+    </section>
 
-        <div class="stream">
-            <h2>BBA</h2>
-            <ul>
-            <?php
-                $pre_q = "SELECT * FROM `papers` WHERE `course`=?  ORDER BY `year`";
-                 // course name 
-                $values= ['BBA'];
+    <!-- BCA PAPERS -->
+    <section style="background:var(--bg-light);padding:30px 0 60px;" class="appear-animation">
+        <div class="container">
+            <div class="course-heading">
+                <div class="course-badge">🖥️ BCA</div>
+                <h2>Bachelor of Computer Applications</h2>
+            </div>
+
+            <div class="papers-list">
+                <?php
+                $pre_q = "SELECT * FROM `papers` WHERE `course`=? ORDER BY `year`";
+                $values = ['BCA'];
                 $res = select($pre_q, $values, 's');
-
-
                 $path = PAPERS_IMG_PATH;
+                $count = 0;
 
-
-                while($row = mysqli_fetch_assoc($res)){
-                $book_btn = "";
-                if (!$settings_r['shutdown']) {
-                    $login = 0;
-                    if (isset($_SESSION['login']) && $_SESSION['login'] == true) {
-                    $login = 1;
+                while ($row = mysqli_fetch_assoc($res)) {
+                    $count++;
+                    if (!$settings_r['shutdown']) {
+                        $login = 0;
+                        if (isset($_SESSION['login']) && $_SESSION['login'] == true) {
+                            $login = 1;
+                        }
+                        if ($login) {
+                            $btn = "<a href='$path$row[pdf]' class='btn-paper-download' download>
+                        <i class='bi bi-download'></i> Download
+                      </a>";
+                        } else {
+                            $btn = "<button onclick='checkLoginToBook($login)' class='btn-paper-locked'>
+                        <i class='bi bi-lock'></i> Login
+                      </button>";
+                        }
+                    } else {
+                        $btn = '';
                     }
+                    echo <<<data
 
-                    if ($login) {
-                    $book_btn = "<a href='$path$row[pdf]'class='pdf_dow' download>
-                                    Download $row[subject] Question Papers $row[year]
-                                </a>";
-                } else {
-                    $book_btn = "<a  onclick='checkLoginToBook($login)'class='pdf_dow' >
-                                     Download $row[subject] Question Papers $row[year]
-                                </a>";
-                }
-                    
-                }
-                echo<<<data
-                
-                <li>$book_btn</li>
-                
+          <div class="paper-item appear-animation">
+            <div class="paper-item-info">
+              <div class="paper-item-icon">📄</div>
+              <div>
+                <div class="paper-item-title">$row[subject]</div>
+                <div class="paper-item-meta">📅 Year: $row[year] &nbsp;·&nbsp; 🎓 BCA</div>
+              </div>
+            </div>
+            $btn
+          </div>
 
-                data;
+          data;
+                }
+
+                if ($count === 0) {
+                    echo '<div class="text-center py-5" style="color:var(--text-muted);">
+                  <div style="font-size:3rem;margin-bottom:16px;">📭</div>
+                  <p>No BCA papers available yet. Check back soon!</p>
+                </div>';
                 }
                 ?>
-            </ul>
+            </div>
         </div>
+    </section>
 
-    </div>
-   
+    <!-- BBA PAPERS -->
+    <section style="background:white;padding:60px 0;" class="appear-animation">
+        <div class="container">
+            <div class="course-heading">
+                <div class="course-badge"
+                    style="background:linear-gradient(135deg,var(--secondary),var(--secondary-dark));">💼 BBA</div>
+                <h2>Bachelor of Business Administration</h2>
+            </div>
+
+            <div class="papers-list">
+                <?php
+                $pre_q = "SELECT * FROM `papers` WHERE `course`=? ORDER BY `year`";
+                $values = ['BBA'];
+                $res = select($pre_q, $values, 's');
+                $path = PAPERS_IMG_PATH;
+                $count = 0;
+
+                while ($row = mysqli_fetch_assoc($res)) {
+                    $count++;
+                    if (!$settings_r['shutdown']) {
+                        $login = 0;
+                        if (isset($_SESSION['login']) && $_SESSION['login'] == true) {
+                            $login = 1;
+                        }
+                        if ($login) {
+                            $btn = "<a href='$path$row[pdf]' class='btn-paper-download' download style='background:linear-gradient(135deg,var(--secondary),var(--secondary-dark));'>
+                        <i class='bi bi-download'></i> Download
+                      </a>";
+                        } else {
+                            $btn = "<button onclick='checkLoginToBook($login)' class='btn-paper-locked'>
+                        <i class='bi bi-lock'></i> Login
+                      </button>";
+                        }
+                    } else {
+                        $btn = '';
+                    }
+                    echo <<<data
+
+          <div class="paper-item appear-animation" style="border-left:3px solid var(--secondary);padding-left:21px;">
+            <div class="paper-item-info">
+              <div class="paper-item-icon" style="background:rgba(6,182,212,0.1);color:var(--secondary);">📄</div>
+              <div>
+                <div class="paper-item-title">$row[subject]</div>
+                <div class="paper-item-meta">📅 Year: $row[year] &nbsp;·&nbsp; 💼 BBA</div>
+              </div>
+            </div>
+            $btn
+          </div>
+
+          data;
+                }
+
+                if ($count === 0) {
+                    echo '<div class="text-center py-5" style="color:var(--text-muted);">
+                  <div style="font-size:3rem;margin-bottom:16px;">📭</div>
+                  <p>No BBA papers available yet. Check back soon!</p>
+                </div>';
+                }
+                ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="background:var(--bg-light);padding:40px 0 60px;" class="appear-animation">
+        <div class="container">
+            <div class="text-center"
+                style="background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:var(--radius-xl);padding:48px 32px;color:white;">
+                <h3 style="color:white;font-weight:800;margin-bottom:12px;">📖 Looking for Notes Too?</h3>
+                <p style="color:rgba(255,255,255,0.75);margin-bottom:28px;">We have comprehensive notes for all subjects
+                    alongside these papers.</p>
+                <a href="notes.php" class="btn-hero-primary">Browse All Notes →</a>
+            </div>
+        </div>
+    </section>
+
     <?php require('inc/footer.php'); ?>
 </body>
 

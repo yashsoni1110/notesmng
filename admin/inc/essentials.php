@@ -1,54 +1,57 @@
 <?php
 // frontend purpose data 
-define('SITE_URL','http://127.0.0.1/NOTESMG/');
-define('ABOUT_IMG_PATH',SITE_URL.'images/about/');
+define('SITE_URL', 'http://127.0.0.1/notesmng/');
+define('ABOUT_IMG_PATH', SITE_URL . 'images/about/');
 
-define('NOTES_IMG_PATH',SITE_URL.'images/notes/');
-define('PAPERS_IMG_PATH',SITE_URL.'images/papers/');
+define('NOTES_IMG_PATH', SITE_URL . 'images/notes/');
+define('PAPERS_IMG_PATH', SITE_URL . 'images/papers/');
 
 
 
 //backend upload process needs this data  
- define('UPLOAD_IMAGE_PATH',$_SERVER['DOCUMENT_ROOT'].'/NOTESMG/images/');
- define('ABOUT_FOLDER','about/');
- define('NOTES_FOLDER','notes/');
- define('PAPERS_FOLDER','papers/');
+define('UPLOAD_IMAGE_PATH', $_SERVER['DOCUMENT_ROOT'] . '/notesmng/images/');
+define('ABOUT_FOLDER', 'about/');
+define('NOTES_FOLDER', 'notes/');
+define('PAPERS_FOLDER', 'papers/');
 
 
 
 //  phpmailer info 
-    define('HOTEL_EMAIL','ramproject0019823@gmail.com');
-    define('HOTEL_EMAIL_PASS','pfnp qfiz tuqp eejg');
-    define('HOTEL_NAME','PALACE');
+define('PROJECT_EMAIL', 'ramproject0019823@gmail.com');
+define('PROJECT_EMAIL_PASS', 'pfnp qfiz tuqp eejg');
+define('PROJECT_NAME', 'Notes Management');
 
 
 
-    function adminLogin(){
-        session_start();
-        if(!(isset($_SESSION['adminLogin']) && $_SESSION['adminLogin'] = true)){
-            echo"
+function adminLogin()
+{
+    session_start();
+    if (!(isset($_SESSION['adminLogin']) && $_SESSION['adminLogin'] == true)) {
+        echo "
             <script>
                 window.location.href='index.php';
              </script>
         ";
 
-        }
-        // session_regenerate_id(true);
-        
     }
-    function redirect($url){
-        echo"
+    // session_regenerate_id(true);
+
+}
+function redirect($url)
+{
+    echo "
             <script>
                 window.location.href='$url';
              </script>
         ";
-    }
+}
 
-    function alert ($type,$msg){
+function alert($type, $msg)
+{
 
-        $bs_class =($type == "success") ? "alert-success" : "alert-danger";
+    $bs_class = ($type == "success") ? "alert-success" : "alert-danger";
 
-        echo <<<alert
+    echo <<<alert
             <div class=" alert $bs_class alert-dismissible fade show custom-alert" role="alert">
                     <strong class="me-3">$msg</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -58,78 +61,71 @@ define('PAPERS_IMG_PATH',SITE_URL.'images/papers/');
 
 }
 
-  function uploadImage($image,$folder)
-  {
-    $valid_mime = ['image/jpeg','image/png','image/webp'];
+function uploadImage($image, $folder)
+{
+    $valid_mime = ['image/jpeg', 'image/png', 'image/webp'];
     $img_mime = $image['type'];
-    if(!in_array($img_mime,$valid_mime)){
+    if (!in_array($img_mime, $valid_mime)) {
         return 'inv_img';
-    }
-    else if(($image['size']/(1024*1024))>2){
+    } else if (($image['size'] / (1024 * 1024)) > 2) {
         return 'inv_size';
 
+    } else {
+        $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
+        $rname = 'IMG_' . random_int(11111, 99999) . ".$ext";
+        $img_path = UPLOAD_IMAGE_PATH . $folder . $rname;
+        if (move_uploaded_file($image['tmp_name'], $img_path)) {
+            return $rname;
+
+        } else {
+            return 'upd_failed';
+
+        }
+
     }
-    else {
-        $ext = pathinfo($image['name'],PATHINFO_EXTENSION);
-        $rname ='IMG_'.random_int(11111,99999).".$ext";
-        $img_path = UPLOAD_IMAGE_PATH.$folder.$rname;
-       if(move_uploaded_file($image['tmp_name'],$img_path)){
-        return $rname;
+}
 
-       }
-       else{
-        return 'upd_failed';
-
-       }
-       
-    }
-  }
-
-  function deleteImage($image, $folder){
-    if(unlink(UPLOAD_IMAGE_PATH.$folder.$image)){
+function deleteImage($image, $folder)
+{
+    if (unlink(UPLOAD_IMAGE_PATH . $folder . $image)) {
         return true;
-    }
-    else{
+    } else {
         return false;
     }
-  }
+}
 
 
-  
 
-  function uploadPDF($image,$folder)
-  {
+
+function uploadPDF($image, $folder)
+{
     $valid_mime = ['application/pdf'];
     $img_mime = $image['type'];
-    if(!in_array($img_mime,$valid_mime)){
+    if (!in_array($img_mime, $valid_mime)) {
         return 'inv_pdf';
-    }
-    else if(($image['size'])>41943040){
+    } else if (($image['size']) > 41943040) {
         return 'inv_size';
 
 
+    } else {
+        $ext = pathinfo($image['name'], PATHINFO_EXTENSION);
+        $rname = 'Notes_' . random_int(11111, 99999) . ".$ext";
+        $img_path = UPLOAD_IMAGE_PATH . $folder . $rname;
+        if (move_uploaded_file($image['tmp_name'], $img_path)) {
+            return $rname;
+
+        } else {
+            return 'upd_failed';
+
+        }
+
     }
-    
-    else {
-        $ext = pathinfo($image['name'],PATHINFO_EXTENSION);
-        $rname ='Notes_'.random_int(11111,99999).".$ext";
-        $img_path = UPLOAD_IMAGE_PATH.$folder.$rname;
-       if(move_uploaded_file($image['tmp_name'],$img_path)){
-        return $rname;
-
-       }
-       else{
-        return 'upd_failed';
-
-       }
-       
-    }
-  }
+}
 
 
 
 
-  
+
 //   function uploadUserImage($image)
 //   {
 //     $valid_mime = ['image/jpeg','image/png','image/webp'];
@@ -137,7 +133,7 @@ define('PAPERS_IMG_PATH',SITE_URL.'images/papers/');
 //     if(!in_array($img_mime,$valid_mime)){
 //         return 'inv_img';
 //     }
-    
+
 //     else {
 //         $ext = pathinfo($image['name'],PATHINFO_EXTENSION);
 //         $rname ='IMG_'.random_int(11111,99999).".jpeg";
@@ -163,12 +159,12 @@ define('PAPERS_IMG_PATH',SITE_URL.'images/papers/');
 //         return 'upd_failed';
 
 //        }
-       
+
 //     }
 
 //   }
 
 
- 
+
 
 ?>

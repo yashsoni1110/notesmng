@@ -15,7 +15,7 @@ use PHPMailer\PHPMailer\Exception;
 
 
 
-function send_mail($email,$token,$type)
+function send_mail($email, $token, $type)
 {
 
    // if($type == "email_confirmation"){
@@ -24,15 +24,15 @@ function send_mail($email,$token,$type)
    //    $content = 'confirm your email';
    // }
    // else{
-      $page = 'index.php';
-      $subject = 'Account reset link';
-      $content = 'reset your account';
+   $page = 'index.php';
+   $subject = 'Account reset link';
+   $content = 'reset your account';
 
 
 
 
    // }
- 
+
    // // Set SMTP server and port
    // ini_set('SMTP', 'localhost');
    // ini_set('smtp_port', 25);
@@ -80,19 +80,19 @@ function send_mail($email,$token,$type)
       //Server settings
       $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
       $mail->isSMTP();                                            //Send using SMTP
-      $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
-      $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-      $mail->Username   = HOTEL_EMAIL;                     //SMTP username
-      $mail->Password   = HOTEL_EMAIL_PASS;                               //SMTP password
+      $mail->Host = 'smtp.gmail.com';                     //Set the SMTP server to send through
+      $mail->SMTPAuth = true;                                   //Enable SMTP authentication
+      $mail->Username = PROJECT_EMAIL;                     //SMTP username
+      $mail->Password = PROJECT_EMAIL_PASS;                               //SMTP password
       $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
-      $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set
+      $mail->Port = 587;                                    //TCP port to connect to; use 587 if you have set
       //   `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
       //Recipients
-      $mail->setFrom(HOTEL_EMAIL, HOTEL_NAME);
+      $mail->setFrom(PROJECT_EMAIL, PROJECT_NAME);
       $mail->addAddress($email);     //Add a recipient
       //  $mail->addAddress('ellen@example.com');               //Name is optional
-      $mail->addReplyTo(HOTEL_EMAIL, HOTEL_NAME);
+      $mail->addReplyTo(PROJECT_EMAIL, PROJECT_NAME);
       //  $mail->addCC('cc@example.com');
       //  $mail->addBCC('bcc@example.com');
 
@@ -103,7 +103,7 @@ function send_mail($email,$token,$type)
       //Content
       $mail->isHTML(true);                                  //Set email format to HTML
       $mail->Subject = $subject;
-      $mail->Body    = "Click the likn to $content: <br> <a href ='" . SITE_URL . "$page?$type&email=$email&token=$token" . "' >CLICK ME</a>";
+      $mail->Body = "Click the link to $content: <br> <a href ='" . SITE_URL . "$page?$type&email=$email&token=$token" . "' >CLICK ME</a>";
       //  $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
       if ($mail->send()) {
@@ -173,9 +173,9 @@ if (isset($_POST['register'])) {
    }
 }
 
-if(isset($_POST['login'])){
+if (isset($_POST['login'])) {
    $data = filteration($_POST);
-   
+
    //check user exists or not 
 
    $u_exist = select(
@@ -185,101 +185,90 @@ if(isset($_POST['login'])){
    );
    if (mysqli_num_rows($u_exist) == 0) {
       echo 'inv_email_mob';
-     
-   }
-   else{
-   $u_fetch = mysqli_fetch_assoc($u_exist);
-   if($u_fetch['is_verified']==0){
-      echo 'not_verified';
 
-   }
-   else if($u_fetch['status']==0){
-      echo 'inactive';
+   } else {
+      $u_fetch = mysqli_fetch_assoc($u_exist);
+      if ($u_fetch['is_verified'] == 0) {
+         echo 'not_verified';
 
-   }
-   else{
-      if(!password_verify($data['pass'], $u_fetch['password'])){
-         echo 'invalid_pass';
+      } else if ($u_fetch['status'] == 0) {
+         echo 'inactive';
 
+      } else {
+         if (!password_verify($data['pass'], $u_fetch['password'])) {
+            echo 'invalid_pass';
+
+         } else {
+            session_start();
+            $_SESSION['login'] = true;
+            $_SESSION['uId'] = $u_fetch['id'];
+            $_SESSION['uName'] = $u_fetch['name'];
+            // $_SESSION['uPic'] = $u_fetch['profile'];
+            $_SESSION['uPhone'] = $u_fetch['phonenum'];
+            echo 1;
+
+         }
       }
-      else{
-         session_start();
-         $_SESSION['login'] = true;
-         $_SESSION['uId'] = $u_fetch['id'];
-         $_SESSION['uName'] = $u_fetch['name'];
-         // $_SESSION['uPic'] = $u_fetch['profile'];
-         $_SESSION['uPhone'] = $u_fetch['phonenum'];
-         echo 1;
-         
-      }
-   }
    }
 
 }
 
-if(isset($_POST['forgot_pass']))
-{
+if (isset($_POST['forgot_pass'])) {
    $data = filteration($_POST);
-     //check user exists or not 
+   //check user exists or not 
 
-     $u_exist = select(
+   $u_exist = select(
       "SELECT * FROM `user_cred` WHERE `email`=? LIMIT 1",
       [$data['email']],
       's'
    );
    if (mysqli_num_rows($u_exist) == 0) {
       echo 'inv_email';
-     
-   }
-   else
-   {
+
+   } else {
       $u_fetch = mysqli_fetch_assoc($u_exist);
-   if($u_fetch['is_verified']==0){
-      echo 'not_verified';
+      if ($u_fetch['is_verified'] == 0) {
+         echo 'not_verified';
 
-   }
-   else if($u_fetch['status']==0){
-      echo 'inactive';
+      } else if ($u_fetch['status'] == 0) {
+         echo 'inactive';
 
-   }
-   else{
-      // send resert link to email
-      $token = bin2hex(random_bytes(16));
-      if(!send_mail($data['email'],$token,'account_recovery')){
-         echo 'mail_failed_pass_reset';
+      } else {
+         // send resert link to email
+         $token = bin2hex(random_bytes(16));
+         if (!send_mail($data['email'], $token, 'account_recovery')) {
+            echo 'mail_failed_pass_reset';
 
-      }
-      else{
-         
-         $date = date("Y-m-d");
-         $query= mysqli_query($con,"UPDATE `user_cred` SET `token`='$token',`t_expire`='$date'WHERE `id`='$u_fetch[id]'");
-         if($query){
-            echo 1;
+         } else {
+
+            $date = date("Y-m-d");
+            $query = "UPDATE `user_cred` SET `token`=?,`t_expire`=? WHERE `id`=?";
+            $res = update($query, [$token, $date, $u_fetch['id']], 'sss');
+
+            if ($res) {
+               echo 1;
+            } else {
+               echo 'upd_failed';
+            }
          }
-         else{
-            echo 'upd_failed';
-         }
       }
-   }
 
    }
 
 }
 
-if(isset($_POST['recover_user'])){
+if (isset($_POST['recover_user'])) {
    $data = filteration($_POST);
 
-   $enc_pass = password_hash($data['pass'],PASSWORD_BCRYPT);
+   $enc_pass = password_hash($data['pass'], PASSWORD_BCRYPT);
 
    $query = "UPDATE `user_cred` SET `password`=?,`token`=? ,`t_expire`=? WHERE `email`=? AND `token`=?";
 
-   $valuse = [$enc_pass,null,null,$data['email'],$data['token']];
+   $valuse = [$enc_pass, null, null, $data['email'], $data['token']];
 
-   if(update($query,$valuse,'sssss'))
-   {
+   if (update($query, $valuse, 'sssss')) {
       echo 1;
-   }
-   else{
+   } else {
       echo 'failed';
    }
 
