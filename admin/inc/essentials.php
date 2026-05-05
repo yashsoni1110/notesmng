@@ -1,6 +1,10 @@
 <?php
 // frontend purpose data 
-define('SITE_URL', 'http://localhost/notesmng/');
+if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1' || $_SERVER['HTTP_HOST'] == '::1') {
+    define('SITE_URL', 'http://localhost/notesmng/');
+} else {
+    define('SITE_URL', 'https://notesmng.free.nf/');
+}
 define('ABOUT_IMG_PATH', SITE_URL . 'images/about/');
 
 define('NOTES_IMG_PATH', SITE_URL . 'images/notes/');

@@ -2,17 +2,27 @@
 
 // Database connection parameters
 // Database connection parameters
-$hname = 'localhost';
-$uname = 'root';
-$pass = '';
-$db = 'notesmng';
+if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1' || $_SERVER['HTTP_HOST'] == '::1') {
+	$hname = 'localhost';
+	$uname = 'root';
+	$pass = '';
+	$db = 'notesmng';
+} else {
+	// Live Server Credentials
+	$hname = 'sql105.infinityfree.com';
+	$uname = 'if0_41839180';
+	$pass = 'B08i5sgqQbcp85K';
+	$db = 'if0_41839180_notes';
+}
 
 // Establishing database connection
-$con = mysqli_connect($hname, $uname, $pass, $db);
-
-// Checking connection
-if (!$con) {
-	die("Cannot Connect to Database" . mysqli_connect_error());
+try {
+	$con = mysqli_connect($hname, $uname, $pass, $db);
+	if (!$con) {
+		die("Cannot Connect to Database: " . mysqli_connect_error());
+	}
+} catch (Exception $e) {
+	die("Database Error: " . $e->getMessage());
 }
 
 // Function to filter input data
@@ -42,18 +52,21 @@ function selectAll($table)
 function select($sql, $values, $datatypes)
 {
 	$con = $GLOBALS['con'];
-	if ($stmt = mysqli_prepare($con, $sql)) {
-		mysqli_stmt_bind_param($stmt, $datatypes, ...$values);
-		if (mysqli_stmt_execute($stmt)) {
-			$res = mysqli_stmt_get_result($stmt);
-			mysqli_stmt_close($stmt);
-			return $res;
-		} else {
-			mysqli_stmt_close($stmt);
-			die("Query cannot be executed - Select");
-		}
+	
+	// Fallback for environments without mysqlnd (like InfinityFree)
+	// We manually escape values and construct the query so mysqli_query returns a native mysqli_result object.
+	$parts = explode('?', $sql);
+	$final_sql = $parts[0];
+	for ($i = 0; $i < count($values); $i++) {
+		$val = mysqli_real_escape_string($con, $values[$i]);
+		$final_sql .= "'" . $val . "'" . $parts[$i + 1];
+	}
+
+	$res = mysqli_query($con, $final_sql);
+	if ($res) {
+		return $res;
 	} else {
-		die("Query cannot be prepared - Select");
+		die("Query cannot be executed - Select: " . mysqli_error($con));
 	}
 }
 
@@ -61,18 +74,17 @@ function select($sql, $values, $datatypes)
 function update($sql, $values, $datatypes)
 {
 	$con = $GLOBALS['con'];
-	if ($stmt = mysqli_prepare($con, $sql)) {
-		mysqli_stmt_bind_param($stmt, $datatypes, ...$values);
-		if (mysqli_stmt_execute($stmt)) {
-			$res = mysqli_stmt_affected_rows($stmt);
-			mysqli_stmt_close($stmt);
-			return $res;
-		} else {
-			mysqli_stmt_close($stmt);
-			die("Query cannot be executed - update");
-		}
+	$parts = explode('?', $sql);
+	$final_sql = $parts[0];
+	for ($i = 0; $i < count($values); $i++) {
+		$val = mysqli_real_escape_string($con, $values[$i]);
+		$final_sql .= "'" . $val . "'" . $parts[$i + 1];
+	}
+
+	if (mysqli_query($con, $final_sql)) {
+		return mysqli_affected_rows($con);
 	} else {
-		die("Query cannot be prepared - update");
+		die("Query cannot be executed - update: " . mysqli_error($con));
 	}
 }
 
@@ -80,18 +92,17 @@ function update($sql, $values, $datatypes)
 function insert($sql, $values, $datatypes)
 {
 	$con = $GLOBALS['con'];
-	if ($stmt = mysqli_prepare($con, $sql)) {
-		mysqli_stmt_bind_param($stmt, $datatypes, ...$values);
-		if (mysqli_stmt_execute($stmt)) {
-			$res = mysqli_stmt_affected_rows($stmt);
-			mysqli_stmt_close($stmt);
-			return $res;
-		} else {
-			mysqli_stmt_close($stmt);
-			die("Query cannot be executed - Insert");
-		}
+	$parts = explode('?', $sql);
+	$final_sql = $parts[0];
+	for ($i = 0; $i < count($values); $i++) {
+		$val = mysqli_real_escape_string($con, $values[$i]);
+		$final_sql .= "'" . $val . "'" . $parts[$i + 1];
+	}
+
+	if (mysqli_query($con, $final_sql)) {
+		return mysqli_affected_rows($con);
 	} else {
-		die("Query cannot be prepared - Insert");
+		die("Query cannot be executed - Insert: " . mysqli_error($con));
 	}
 }
 
@@ -99,18 +110,17 @@ function insert($sql, $values, $datatypes)
 function delete($sql, $values, $datatypes)
 {
 	$con = $GLOBALS['con'];
-	if ($stmt = mysqli_prepare($con, $sql)) {
-		mysqli_stmt_bind_param($stmt, $datatypes, ...$values);
-		if (mysqli_stmt_execute($stmt)) {
-			$res = mysqli_stmt_affected_rows($stmt);
-			mysqli_stmt_close($stmt);
-			return $res;
-		} else {
-			mysqli_stmt_close($stmt);
-			die("Query cannot be executed - Delete");
-		}
+	$parts = explode('?', $sql);
+	$final_sql = $parts[0];
+	for ($i = 0; $i < count($values); $i++) {
+		$val = mysqli_real_escape_string($con, $values[$i]);
+		$final_sql .= "'" . $val . "'" . $parts[$i + 1];
+	}
+
+	if (mysqli_query($con, $final_sql)) {
+		return mysqli_affected_rows($con);
 	} else {
-		die("Query cannot be prepared - Delete");
+		die("Query cannot be executed - Delete: " . mysqli_error($con));
 	}
 }
 

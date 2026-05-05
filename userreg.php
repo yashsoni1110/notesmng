@@ -1,16 +1,24 @@
 <?php
 if (isset($_POST['name'])) {
-    // Connect to InfinityFree database shown in the screenshot
-    $server = "localhost";
-    $username = "root";
-    $password = "";
-    $database = "notesmng";
+    if ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1' || $_SERVER['HTTP_HOST'] == '::1') {
+        $server = "localhost";
+        $username = "root";
+        $password = "";
+        $database = "notesmng";
+    } else {
+        $server = "sql105.infinityfree.com";
+        $username = "if0_41839180";
+        $password = "B08i5sgqQbcp85K";
+        $database = "if0_41839180_notes";
+    }
 
-    $con = mysqli_connect($server, $username, $password, $database);
-
-    if (!$con) {
-        die("connection to this database failed due to" .
-            mysqli_connect_error());
+    try {
+        $con = mysqli_connect($server, $username, $password, $database);
+        if (!$con) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
+    } catch (Exception $e) {
+        die("Database Error: " . $e->getMessage());
     }
     // echo "success connecting to the db";
 
