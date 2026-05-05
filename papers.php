@@ -61,9 +61,15 @@
                                 $login = 1;
                             }
                             if ($login) {
-                                $btn = "<a href='$path$row[pdf]' class='btn-paper-download' download>
-                                          <i class='bi bi-download'></i> Download
-                                        </a>";
+                                $btn = "
+                                  <div class='d-flex gap-2'>
+                                    <a href='$path$row[pdf]' class='btn-paper-download' target='_blank'>
+                                      <i class='bi bi-eye'></i> View
+                                    </a>
+                                    <a href='$path$row[pdf]' class='btn-paper-download' download style='background:var(--primary-dark);'>
+                                      <i class='bi bi-download'></i>
+                                    </a>
+                                  </div>";
                             } else {
                                 $btn = "<button onclick='checkLoginToBook($login)' class='btn-paper-locked'>
                                           <i class='bi bi-lock'></i> Login
