@@ -24,26 +24,24 @@ xhr.onload = function() {
     modal.hide();
 
 
-    if (this.responseText == 'inv_pdf') {
+    console.log("Server Response:", this.responseText);
+
+    if (this.responseText.trim() == 'inv_pdf') {
         alert('error', 'Only pdf are allowed!');
-        
     }
-        else if(this.responseText == 'inv_size'){
+    else if(this.responseText.trim() == 'inv_size'){
         alert('error', 'pdf should be less than 35MB!');
     }
-    // else if(this.responseText == ){
-    //     alert('error', 'pdf should be less than 35MB!');
-    // }
-    else if(this.responseText == 'upd_failed'){
+    else if(this.responseText.trim() == 'upd_failed'){
         alert('error', 'Paper upload failed!');
     }
-    else if(this.responseTesxt ==1) {
+    else if(this.responseText.trim() == '1') {
         alert('success','New Paper added!');
         papers_s_form.reset();
         get_papers();
     }
-    else{
-        alert('error','pdf should be less than 35MB!!');
+    else {
+        alert('error','Upload completed but server returned: ' + this.responseText);
     }
 
 

@@ -70,7 +70,15 @@ adminLogin();
             </div>
             <div class="mb-3">
               <label class="form-label">Course</label>
-              <input type="text" name="papers_course" class="form-control" placeholder="e.g. BCA" required />
+              <select name="papers_course" class="form-select shadow-none" required>
+                <option value="">Select Course</option>
+                <?php
+                $res = selectAll('courses');
+                while ($row = mysqli_fetch_assoc($res)) {
+                  echo "<option value='$row[name]'>$row[name]</option>";
+                }
+                ?>
+              </select>
             </div>
             <div class="mb-3">
               <label class="form-label">PDF File</label>

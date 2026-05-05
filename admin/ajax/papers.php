@@ -17,7 +17,7 @@ if (isset($_POST['add_papers'])) {
         echo $img_r;
     } else {
         $q = "INSERT INTO `papers`( `pdf`,`subject`,`course`, `year`) VALUES (?,?,?,?)";
-        $values = [$img_r, $frm_data['subject'],$frm_data['course'], $frm_data['year']];
+        $values = [$img_r, $frm_data['subject'], $frm_data['course'], $frm_data['year']];
         $res = insert($q, $values, 'ssss');
         echo $res;
     }

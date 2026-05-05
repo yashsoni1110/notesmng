@@ -1,6 +1,6 @@
 <?php
 // frontend purpose data 
-define('SITE_URL', 'http://127.0.0.1/notesmng/');
+define('SITE_URL', 'http://localhost/notesmng/');
 define('ABOUT_IMG_PATH', SITE_URL . 'images/about/');
 
 define('NOTES_IMG_PATH', SITE_URL . 'images/notes/');
@@ -9,7 +9,7 @@ define('PAPERS_IMG_PATH', SITE_URL . 'images/papers/');
 
 
 //backend upload process needs this data  
-define('UPLOAD_IMAGE_PATH', $_SERVER['DOCUMENT_ROOT'] . '/notesmng/images/');
+define('UPLOAD_IMAGE_PATH', dirname(__DIR__, 2) . '/images/');
 define('ABOUT_FOLDER', 'about/');
 define('NOTES_FOLDER', 'notes/');
 define('PAPERS_FOLDER', 'papers/');

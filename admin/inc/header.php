@@ -43,5 +43,10 @@
                 <i class="bi bi-book"></i> Notes
             </a>
         </li>
+        <li>
+            <a href="courses.php">
+                <i class="bi bi-mortarboard"></i> Courses
+            </a>
+        </li>
     </ul>
 </div>

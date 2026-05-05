@@ -24,27 +24,23 @@ xhr.onload = function() {
     modal.hide();
 
 
-    if (this.responseText == 'inv_pdf') {
+    if (this.responseText.trim() == 'inv_pdf') {
         alert('error', 'Only pdf are allowed!');
-        
     }
-        else if(this.responseText == 'inv_size'){
+    else if(this.responseText.trim() == 'inv_size'){
         alert('error', 'pdf should be less than 35MB!');
     }
-    // else if(this.responseText == ){
-    //     alert('error', 'pdf should be less than 35MB!');
-    // }
-    else if(this.responseText == 'upd_failed'){
+    else if(this.responseText.trim() == 'upd_failed'){
         alert('error', 'Notes upload failed!');
     }
-    else if(this.responseText == 1){
+    else if(this.responseText.trim() == '1'){
         alert('success','New Notes added!');
         notes_s_form.reset();
         get_notes();
     }
-else{
-    alert('error','pdf should be less than 35MB!!');
-}
+    else{
+        alert('error','pdf should be less than 35MB!!');
+    }
 
 }
 xhr.send(data);

@@ -17,7 +17,7 @@ if (isset($_POST['add_notes'])) {
         echo $img_r;
     } else {
         $q = "INSERT INTO `notes`( `pdf`,`name`,`course`, `description`) VALUES (?,?,?,?)";
-        $values = [$img_r, $frm_data['name'],$frm_data['course'], $frm_data['desc']];
+        $values = [$img_r, $frm_data['name'], $frm_data['course'], $frm_data['desc']];
         $res = insert($q, $values, 'ssss');
         echo $res;
     }
